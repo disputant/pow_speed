@@ -91,16 +91,39 @@ inline unsigned long long powmul(double& res, int N)
     return mt.duration<>();
 }
 
+inline unsigned long long powfst(double& res, int N)
+{
+    res = 0;
+    muTimer mt;
+    for(int i = 0; i < Count; ++i)
+    {
+        double s = 1, x = (i+Count/2)/double(Count + i/2);
+        int M = N;
+        while(M)
+        {
+            if (M&1) s *= x;
+            x *= x;
+            M >>= 1;
+        }
+        res += s;
+    }
+    mt.stop();
+    return mt.duration<>();
+}
+
 int main(int argc, const char * argv[])
 {
 
     double s = 0;
-    for(int N = 2; N < 100; ++N)
+    for(int N = 2; N < 1000; ++N)
     {
-        double r1,r2,r3;
+        double r1,r2,r3,r4;
         cout << N << " " << powpow(r1,N)/1000.0
                   << " " << powexp(r2,N)/1000.0
-                  << " " << powmul(r3,N)/1000.0 << endl;
+                  << " " << powmul(r3,N)/1000.0
+                  << " " << powfst(r4,N)/1000.0 << endl;
+
+        //cout << setw(10) << r1 << setw(10) << r2 << setw(10) << r3 << setw(10) << r4 << endl;
         s += r1+r2+r3;
     }
     cout << s;
